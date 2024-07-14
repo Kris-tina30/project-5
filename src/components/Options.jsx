@@ -1,11 +1,11 @@
-import React from 'react';
+import React from "react";
 
-const Options = ({ updateFeedback, onReset, total, isVisibleButton }) => {
+const Options = ({ updateFormula, onReset, total, isVisibleButton }) => {
   return (
     <div>
-      <button onClick={() => updateFeedback('good')}>Good</button>
-      <button onClick={() => updateFeedback('neutral')}>Neutral</button>
-      <button onClick={() => updateFeedback('bad')}>Bad</button>
+      <button onClick={() => updateFormula("weight")}>Weight</button>
+      <button onClick={() => updateFormula("sportTime")}>sportTime</button>
+      <button onClick={() => updateFormula("bad")}>Bad</button>
       {total !== 0 && <button onClick={onReset}>Reset</button>}
     </div>
   );

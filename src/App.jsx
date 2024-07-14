@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useEffect } from "react";
 import "./App.css";
-import Feedback from "./components/Feedback";
+import Formula from "./components/Formula";
 import Options from "./components/Options";
 import Notification from "./components/Notification";
 import Description from "./components/Description";
@@ -9,27 +9,26 @@ import UserSettingsForm from "./components/UserSettingsForm";
 
 function App() {
   const initialValues = {
-    good: 0,
-    neutral: 0,
-    bad: 0,
+    weight: 0,
+    sportTime: 0,
   };
 
   const [values, setValues] = useState(() => {
-    const stringifiedValues = localStorage.getItem("feedbackValues");
+    const stringifiedValues = localStorage.getItem("formulaValues");
     const parsedValues = JSON.parse(stringifiedValues) ?? initialValues;
     return parsedValues;
   });
 
   const [isVisibleButton, setIsVisibleButton] = useState(false);
 
-  const updateFeedback = (feedbackType) => {
-    setValues({ ...values, [feedbackType]: values[feedbackType] + 1 });
+  const updateFormula = (formulaType) => {
+    setValues({ ...values, [formulaType]: values[formulaType] + 1 });
     setIsVisibleButton(true);
   };
 
-  const totalFeedback = values.good + values.neutral + values.bad;
+  const totalFormula = values.weight + values.sportTime + values.bad;
   const positive = Math.round(
-    ((values.good + values.neutral) / totalFeedback) * 100
+    ((values.weight + values.sportTime) / totalFormula) * 100
   );
 
   const handleResetButton = () => {
@@ -38,7 +37,7 @@ function App() {
   };
 
   useEffect(() => {
-    localStorage.setItem("feedbackValues", JSON.stringify(values));
+    localStorage.setItem("formulaValues", JSON.stringify(values));
   }, [values]);
 
   const [isModalOpen, setModalOpen] = useState(false);
@@ -51,7 +50,7 @@ function App() {
   return (
     <>
       <Description />
-      <button onClick={handleOpenModal}>Edit User Settings</button>
+      <button onClick={handleOpenModal}>Setting</button>
       <UserSettingsForm
         isOpen={isModalOpen}
         onClose={handleCloseModal}
@@ -59,13 +58,13 @@ function App() {
       />
 
       {/* <Options
-        updateFeedback={updateFeedback}
+        updateFormula={updateFormula}
         onReset={handleResetButton}
-        total={totalFeedback}
+        total={totalFormula}
         isVisibleButton={isVisibleButton}
       />
-      {totalFeedback > 0 ? (
-        <Feedback values={values} total={totalFeedback} positive={positive} />
+      {totalFormula > 0 ? (
+        <Formula values={values} total={totalFormula} positive={positive} />
       ) : (
         <Notification />
       )} */}

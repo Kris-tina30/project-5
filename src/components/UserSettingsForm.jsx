@@ -1,26 +1,43 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import axios from "axios";
 import DailyNorma from "./DailyNorma";
 
+const MAX_CHAR_VALIDATION = 50;
+const MAX_CHAR_WATER_VALIDATION = 15;
+const MIN_CHAR_VALIDATION = 3;
+
 const schema = yup.object().shape({
   avatar: yup.mixed().required("Avatar is required"),
   gender: yup.string().required("Gender is required"),
-  name: yup.string().required("Name is required"),
-  email: yup.string().email("Invalid email").required("Email is required"),
-  weight: yup
-    .number()
-    .positive("Weight must be a positive number")
-    .required("Weight is required"),
-  activeTime: yup
-    .number()
-    .positive("Active time must be a positive number")
-    .required("Active time is required"),
+  name: yup
+    .string()
+    .min(
+      MIN_CHAR_VALIDATION,
+      `Your name must be more than ${MIN_CHAR_VALIDATION} characters!`
+    )
+    .max(
+      MAX_CHAR_VALIDATION,
+      `Your name must be less than ${MAX_CHAR_VALIDATION} characters!`
+    )
+    .required("Name is required"),
+  email: yup
+    .string()
+    .email("You must enter valid email address!")
+    .required("Email is required"),
+  weight: yup.number().positive("Weight must be a positive number"),
+  activeTime: yup.number().positive("Active time must be a positive number"),
+
   waterIntake: yup
     .number()
     .positive("Water intake must be a positive number")
+
+    .max(
+      MAX_CHAR_WATER_VALIDATION,
+      `Emount of water intake must not be a greater than ${MAX_CHAR_WATER_VALIDATION} number!`
+    )
     .required("Water intake is required"),
 });
 
@@ -34,6 +51,9 @@ const UserSettingsModal = ({ isOpen, onClose, onUpdate }) => {
     reset,
   } = useForm({
     resolver: yupResolver(schema),
+    defaultValues: {
+      gender: "woman",
+    },
   });
 
   const onSubmit = async (data) => {
@@ -61,6 +81,23 @@ const UserSettingsModal = ({ isOpen, onClose, onUpdate }) => {
     const file = e.target.files[0];
     setPreview(URL.createObjectURL(file));
   };
+  const handleBackdropClick = (e) => {
+    if (e.target === e.currentTarget) {
+      onClose();
+    }
+  };
+
+  useEffect(() => {
+    const handleEscape = (e) => {
+      if (e.key === "Escape") {
+        onClose();
+      }
+    };
+    document.addEventListener("keydown", handleEscape);
+    return () => {
+      document.removeEventListener("keydown", handleEscape);
+    };
+  }, [onClose]);
 
   if (!isOpen) return null;
 
@@ -110,6 +147,16 @@ const UserSettingsModal = ({ isOpen, onClose, onUpdate }) => {
             <label>The time of active participation in sports:</label>
             <input type="number" {...register("activeTime")} />
             {errors.activeTime && <p>{errors.activeTime.message}</p>}
+          </div>
+          <div className="form-group">
+            <label>The required amount of water in liters per day:</label>
+            <input type="number" {...register("waterIntake")} />
+            {errors.waterIntake && <p>{errors.waterIntake.message}</p>}
+          </div>
+          <div className="form-group">
+            <label>Write down how much water you will drink:</label>
+            <input type="number" {...register("waterIntake")} />
+            {errors.waterIntake && <p>{errors.waterIntake.message}</p>}
           </div>
 
           <button type="submit">Save</button>
