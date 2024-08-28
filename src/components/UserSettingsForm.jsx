@@ -103,6 +103,9 @@ const UserSettingsModal = ({ isOpen, onClose, onUpdate }) => {
 
   return (
     <div className="modal">
+      <button type="button" onClick={onClose}>
+        Cancel
+      </button>
       <div className="modal-content">
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="form-group">
@@ -160,9 +163,6 @@ const UserSettingsModal = ({ isOpen, onClose, onUpdate }) => {
           </div>
 
           <button type="submit">Save</button>
-          <button type="button" onClick={onClose}>
-            Cancel
-          </button>
         </form>
       </div>
     </div>
