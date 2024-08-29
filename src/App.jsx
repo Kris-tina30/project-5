@@ -6,6 +6,7 @@ import Options from "./components/Options";
 import Notification from "./components/Notification";
 import Description from "./components/Description";
 import UserSettingsForm from "./components/UserSettingsForm";
+import Header from "./components/Header";
 
 function App() {
   const initialValues = {
@@ -45,10 +46,10 @@ function App() {
   const handleOpenModal = () => setModalOpen(true);
   const handleCloseModal = () => setModalOpen(false);
   const handleUpdate = (data) => {};
-  // Оновіть дані у UserPanel, WaterDailyNorma, WaterProgressBar, WaterList та Calendar
 
   return (
     <>
+      <Header />
       <Description />
       <button onClick={handleOpenModal}>Setting</button>
       <UserSettingsForm

@@ -104,10 +104,13 @@ const UserSettingsModal = ({ isOpen, onClose, onUpdate }) => {
   return (
     <div className="modal">
       <button type="button" onClick={onClose}>
-        Cancel
+        <svg>
+          <use href=""></use>
+        </svg>
       </button>
       <div className="modal-content">
         <form onSubmit={handleSubmit(onSubmit)}>
+          <p>Your photo</p>
           <div className="form-group">
             <label>Upload a photo</label>
             <input
@@ -134,32 +137,29 @@ const UserSettingsModal = ({ isOpen, onClose, onUpdate }) => {
             {errors.name && <p>{errors.name.message}</p>}
           </div>
           <div className="form-group">
-            <label>Email</label>
+            <label>E-mail</label>
+            <input type="email" {...register("email")} />
+            {errors.email && <p>{errors.email.message}</p>}
+          </div>
+
+          <div className="form-group">
+            <p>Outdated password:</p>
+            <label>Password</label>
+
             <input type="email" {...register("email")} />
             {errors.email && <p>{errors.email.message}</p>}
           </div>
           <div className="form-group">
-            <DailyNorma />
+            <label>New Password:</label>
+
+            <input type="email" {...register("email")} />
+            {errors.email && <p>{errors.email.message}</p>}
           </div>
           <div className="form-group">
-            <label>Your weight in kilograms:</label>
-            <input type="number" {...register("weight")} />
-            {errors.weight && <p>{errors.weight.message}</p>}
-          </div>
-          <div className="form-group">
-            <label>The time of active participation in sports:</label>
-            <input type="number" {...register("activeTime")} />
-            {errors.activeTime && <p>{errors.activeTime.message}</p>}
-          </div>
-          <div className="form-group">
-            <label>The required amount of water in liters per day:</label>
-            <input type="number" {...register("waterIntake")} />
-            {errors.waterIntake && <p>{errors.waterIntake.message}</p>}
-          </div>
-          <div className="form-group">
-            <label>Write down how much water you will drink:</label>
-            <input type="number" {...register("waterIntake")} />
-            {errors.waterIntake && <p>{errors.waterIntake.message}</p>}
+            <label>Repeat new password:</label>
+
+            <input type="email" {...register("email")} />
+            {errors.email && <p>{errors.email.message}</p>}
           </div>
 
           <button type="submit">Save</button>
