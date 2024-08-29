@@ -1,34 +1,42 @@
 import React from "react";
 
-const UserLogo = () => {
+const UserLogo = ({ user, onClick }) => {
+  const { name, email, avatar } = user;
+  const userNameInitial = name
+    ? name.charAt(0).toUpperCase()
+    : email.charAt(0).toUpperCase();
+
   return (
     <div>
-      <button type="button">
-        <p>{name}</p>
-        <img src="../" alt="user avatar" />
-        <svg>
-          <use href=""></use>
-        </svg>
-      </button>
+      <div className="user-logo" onClick={onClick}>
+        {avatar ? (
+          <img src={avatar} alt="User Avatar" />
+        ) : (
+          <div className="user-initial">{userNameInitial}</div>
+        )}
+        <span>{name || email}</span>
+      </div>
 
-      <ul>
-        <li>
-          <button type="button">
-            <svg>
-              <use href=""></use>
-            </svg>{" "}
-            Setting
-          </button>
-        </li>
-        <li>
-          <button type="button">
-            <svg>
-              <use href=""></use>
-            </svg>{" "}
-            Log out
-          </button>
-        </li>
-      </ul>
+      <div>
+        <ul>
+          <li>
+            <button type="button">
+              <svg>
+                <use href=""></use>
+              </svg>{" "}
+              Setting
+            </button>
+          </li>
+          <li>
+            <button type="button">
+              <svg>
+                <use href=""></use>
+              </svg>{" "}
+              Log out
+            </button>
+          </li>
+        </ul>
+      </div>
     </div>
   );
 };

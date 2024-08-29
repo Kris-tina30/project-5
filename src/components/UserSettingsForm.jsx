@@ -3,42 +3,50 @@ import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import axios from "axios";
-import DailyNorma from "./DailyNorma";
 
-const MAX_CHAR_VALIDATION = 50;
-const MAX_CHAR_WATER_VALIDATION = 15;
-const MIN_CHAR_VALIDATION = 3;
+const MAX_CHAR_VALIDATION = 64;
+const MIN_CHAR_VALIDATION = 8;
+const MAX_CHAR_NAME_VALIDATION = 32;
 
-const schema = yup.object().shape({
+const Userschema = yup.object().shape({
   avatar: yup.mixed().required("Avatar is required"),
   gender: yup.string().required("Gender is required"),
   name: yup
     .string()
-    .min(
-      MIN_CHAR_VALIDATION,
-      `Your name must be more than ${MIN_CHAR_VALIDATION} characters!`
-    )
     .max(
-      MAX_CHAR_VALIDATION,
-      `Your name must be less than ${MAX_CHAR_VALIDATION} characters!`
+      MAX_CHAR_NAME_VALIDATION,
+      `Your name must be less than ${MAX_CHAR_NAME_VALIDATION} characters!`
     )
     .required("Name is required"),
   email: yup
     .string()
     .email("You must enter valid email address!")
     .required("Email is required"),
-  weight: yup.number().positive("Weight must be a positive number"),
-  activeTime: yup.number().positive("Active time must be a positive number"),
-
-  waterIntake: yup
-    .number()
-    .positive("Water intake must be a positive number")
-
-    .max(
-      MAX_CHAR_WATER_VALIDATION,
-      `Emount of water intake must not be a greater than ${MAX_CHAR_WATER_VALIDATION} number!`
+  currentPassword: yup
+    .string()
+    .min(
+      MIN_CHAR_VALIDATION,
+      `Your current password must be more than ${MIN_CHAR_VALIDATION} characters!`
     )
-    .required("Water intake is required"),
+    .max(
+      MAX_CHAR_VALIDATION,
+      `Your current password must be less than ${MAX_CHAR_VALIDATION} characters!`
+    )
+    .required("current password is required"),
+  newPassword: yup
+    .string()
+    .min(
+      MIN_CHAR_VALIDATION,
+      `Your new password must be more than ${MIN_CHAR_VALIDATION} characters!`
+    )
+    .max(
+      MAX_CHAR_VALIDATION,
+      `Your new password must be less than ${MAX_CHAR_VALIDATION} characters!`
+    )
+    .required("new password is required"),
+  confirmNewPassword: yup
+    .string()
+    .oneOf([yup.ref("newPassword")], "Passwords must match"),
 });
 
 const UserSettingsModal = ({ isOpen, onClose, onUpdate }) => {
@@ -63,9 +71,7 @@ const UserSettingsModal = ({ isOpen, onClose, onUpdate }) => {
       formData.append("gender", data.gender);
       formData.append("name", data.name);
       formData.append("email", data.email);
-      formData.append("weight", data.weight);
-      formData.append("activeTime", data.activeTime);
-      formData.append("waterIntake", data.waterIntake);
+      formData.append("password", data.password);
 
       const response = await axios.post("/api/user/update", formData);
 
@@ -103,16 +109,17 @@ const UserSettingsModal = ({ isOpen, onClose, onUpdate }) => {
 
   return (
     <div className="modal">
+      <h2>Setting</h2>
       <button type="button" onClick={onClose}>
+        x
         <svg>
           <use href=""></use>
         </svg>
       </button>
       <div className="modal-content">
         <form onSubmit={handleSubmit(onSubmit)}>
-          <p>Your photo</p>
+          <label>Your photo</label>
           <div className="form-group">
-            <label>Upload a photo</label>
             <input
               type="file"
               {...register("avatar")}
@@ -120,7 +127,11 @@ const UserSettingsModal = ({ isOpen, onClose, onUpdate }) => {
             />
             {errors.avatar && <p>{errors.avatar.message}</p>}
             {preview && <img src={preview} alt="Avatar Preview" />}
+            <button type="button" className={css.uploadButton}>
+              Upload a photo
+            </button>
           </div>
+
           <div className="form-group">
             <label>Your gender identity</label>
             <label>
@@ -131,23 +142,36 @@ const UserSettingsModal = ({ isOpen, onClose, onUpdate }) => {
             </label>
             {errors.gender && <p>{errors.gender.message}</p>}
           </div>
+
           <div className="form-group">
             <label>Your name</label>
-            <input type="text" {...register("name")} />
+            <input
+              type="text"
+              {...register("name")}
+              placeholder="Enter your name"
+            />
             {errors.name && <p>{errors.name.message}</p>}
           </div>
+
           <div className="form-group">
             <label>E-mail</label>
-            <input type="email" {...register("email")} />
+            <input
+              type="email"
+              {...register("email")}
+              placeholder="Enter your email"
+            />
             {errors.email && <p>{errors.email.message}</p>}
           </div>
 
           <div className="form-group">
-            <p>Outdated password:</p>
             <label>Password</label>
-
-            <input type="email" {...register("email")} />
-            {errors.email && <p>{errors.email.message}</p>}
+            <p>Outdated password:</p>
+            <input
+              type={showOutdatedPassword ? "text" : "password"}
+              {...register("password")}
+              placeholder="Password"
+            />
+            {errors.password && <p>{errors.password.message}</p>}
           </div>
           <div className="form-group">
             <label>New Password:</label>
